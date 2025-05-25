@@ -19,10 +19,8 @@ spec:
       containers:
         - name: ssr-client
           image: madamski52081/ssr-client:latest
+          workingDir: /app
           command: ["npm", "run", "dev"]
-          env:
-            - name: NODE_ENV
-              value: development
           ports:
             - containerPort: 3000
               protocol: TCP
@@ -32,13 +30,6 @@ spec:
               port: 3000
             initialDelaySeconds: 15
             periodSeconds: 20
-            failureThreshold: 3
-          readinessProbe:
-            httpGet:
-              path: /
-              port: 3000
-            initialDelaySeconds: 5
-            periodSeconds: 10
             failureThreshold: 3
           volumeMounts:
             - mountPath: /app/config

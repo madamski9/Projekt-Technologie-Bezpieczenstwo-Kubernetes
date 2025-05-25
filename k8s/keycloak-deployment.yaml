@@ -35,12 +35,19 @@ spec:
               value: "true"
           image: quay.io/keycloak/keycloak:24.0.1
           livenessProbe:
-            exec:
-              command:
-                - curl -f http://localhost:8080 || exit 1
-            failureThreshold: 3
-            periodSeconds: 30
-            timeoutSeconds: 10
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 5
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 5
           name: keycloak
           ports:
             - containerPort: 8080

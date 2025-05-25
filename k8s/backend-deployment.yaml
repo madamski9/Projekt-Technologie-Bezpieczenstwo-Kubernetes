@@ -28,14 +28,13 @@ spec:
               value: development
           image: madamski52081/backend:latest
           livenessProbe:
-            exec:
-              command:
-                - curl
-                - -f
-                - http://localhost:3000/health
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 15
+            periodSeconds: 20
             failureThreshold: 3
-            periodSeconds: 30
-            timeoutSeconds: 10
+            timeoutSeconds: 5
           name: backend
           ports:
             - containerPort: 3000

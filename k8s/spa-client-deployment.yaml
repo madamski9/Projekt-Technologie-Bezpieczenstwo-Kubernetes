@@ -19,10 +19,8 @@ spec:
       containers:
         - name: spa-client
           image: madamski52081/spa-client:latest
+          workingDir: /app
           command: ["npm", "run", "dev"]
-          env:
-            - name: NODE_ENV
-              value: development
           ports:
             - containerPort: 3000
               protocol: TCP

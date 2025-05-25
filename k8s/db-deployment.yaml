@@ -34,10 +34,14 @@ spec:
           livenessProbe:
             exec:
               command:
-                - pg_isready -U user -d mydb
-            failureThreshold: 5
+                - pg_isready
+                - -U
+                - user
+                - -d
+                - mydb
+            initialDelaySeconds: 10
             periodSeconds: 30
-            timeoutSeconds: 10
+            failureThreshold: 5
           name: db
           ports:
             - containerPort: 5432
