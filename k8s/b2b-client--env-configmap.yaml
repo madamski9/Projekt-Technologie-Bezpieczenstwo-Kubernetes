@@ -1,0 +1,18 @@
+apiVersion: v1
+data:
+  API_URL: http://backend:3000
+  B2B_CLIENT_ID: b2b-client
+  B2B_CLIENT_SECRET: 9Pr6cAOn2pOh89ZKawZpWkmUj9lB5NiA
+  EMAIL_FROM: maciek.adamski9@gmail.com
+  EMAIL_TO: maciek.adamski9@gmail.com
+  KEYCLOAK_TOKEN: http://keycloak:8080/realms/korepetycje/protocol/openid-connect/token
+  PORT: "3003"
+  SMTP_HOST: smtp.gmail.com
+  SMTP_PASS: eeiw nzov ajfm niof
+  SMTP_PORT: "587"
+  SMTP_USER: maciek.adamski9@gmail.com
+kind: ConfigMap
+metadata:
+  labels:
+    io.kompose.service: b2b-client-b2b-client--env
+  name: b2b-client--env

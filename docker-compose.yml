@@ -1,0 +1,174 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      args:
+        NODE_ENV: development
+    ports:
+      - "3000:3000"
+    networks:
+      - korepetycje-net
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ./backend:/app
+      - backend_node_modules:/app/node_modules
+    depends_on:
+      db:
+        condition: service_healthy
+      # redis:
+      #   condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  spa-client:
+    build:
+      context: ./spa-client
+      dockerfile: Dockerfile
+      args:
+        NODE_ENV: development
+    ports:
+      - "3002:3000"
+    networks:
+      - korepetycje-net
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - backend
+    command: ["npm", "run", "dev"]
+    volumes:
+      - ./spa-client:/app
+      - spa_client_node_modules:/app/node_modules
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+  ssr-client:
+    build:
+      context: ./ssr-client
+      dockerfile: Dockerfile
+      args:
+        NODE_ENV: development
+    ports:
+      - "3001:3000"  
+    networks:
+      - korepetycje-net
+    environment:
+      - NODE_ENV=development
+    depends_on:
+      - backend
+      - keycloak
+    command: ["npm", "run", "dev"]
+    volumes:
+      - ./ssr-client:/app
+      - ssr_client_node_modules:/app/node_modules
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+  b2b-client:
+    build: ./b2b-client
+    ports:
+      - "3003:3003"
+    env_file:
+      - ./b2b-client/.env
+    networks:
+      - korepetycje-net
+    volumes:
+      - ./b2b-client:/app
+      - b2b_client_node_modules:/app/node_modules
+    depends_on:
+      - backend
+      - keycloak
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_DB: mydb
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - korepetycje-net
+    ports:
+      - "5433:5432"
+    secrets:
+      - db_password
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d mydb"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # redis:
+  #   image: redis:7
+  #   ports:
+  #     - "6379:6379"
+  #   volumes:
+  #     - redis_data:/data
+  #   networks:
+  #     - korepetycje-net
+  #   healthcheck:
+  #     test: ["CMD", "redis-cli", "ping"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
+
+  # rabbitmq:
+  #   image: rabbitmq:3-management
+  #   ports:
+  #     - "5672:5672"
+  #     - "15672:15672"
+  #   networks:
+  #     - korepetycje-net
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "rabbitmq-diagnostics -q ping"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 5
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0.1
+    command:
+      - start-dev
+      - --import-realm
+      - --features=scripts
+    environment:
+      - KEYCLOAK_ADMIN=${KEYCLOAK_USER}
+      - KEYCLOAK_ADMIN_PASSWORD=${KEYCLOAK_PASSWORD}
+      - QUARKUS_TRANSACTION_MANAGER_ENABLE_RECOVERY=true
+    ports:
+      - "8080:8080"
+    networks:
+      - korepetycje-net
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    volumes:
+      - keycloak_data:/opt/keycloak/data
+      - ./keycloak-import:/opt/keycloak/data/import
+
+volumes:
+  # redis_data:
+  db_data:
+  keycloak_data:
+  backend_node_modules:
+  spa_client_node_modules:
+  ssr_client_node_modules:
+  b2b_client_node_modules:
+
+secrets:
+  db_password:
+    file: ./secrets/db_password.txt
+
+networks:
+  korepetycje-net:
