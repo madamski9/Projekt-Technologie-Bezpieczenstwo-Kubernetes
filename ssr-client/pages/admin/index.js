@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import UserRolesManager from './components/UserModal'
-import UserCreateModal from './components/CreateUserModal'
+import UserRolesManager from '../components/UserModal'
+import UserCreateModal from '../components/CreateUserModal'
 
 export async function getServerSideProps(context) {
   const token = context.req.cookies['auth_token']

@@ -25,7 +25,11 @@ spec:
       containers:
         - args:
             - start-dev
-            - --features=scripts
+            - --hostname-strict=false
+            - --proxy-headers=xforwarded
+            - --hostname-url=http://projekttb.local/auth
+            # - --spi-script-upload-enabled=true
+            - --import-realm
           env:
             - name: KEYCLOAK_ADMIN
               value: admin
@@ -33,21 +37,25 @@ spec:
               value: admin
             - name: QUARKUS_TRANSACTION_MANAGER_ENABLE_RECOVERY
               value: "true"
+            - name: KEYCLOAK_FRONTEND_URL
+              value: http://projekttb.local/auth
+            - name: KC_FEATURES
+              value: scripts
           image: quay.io/keycloak/keycloak:24.0.1
-          livenessProbe:
-            httpGet:
-              path: /
-              port: 8080
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 5
-          readinessProbe:
-            httpGet:
-              path: /
-              port: 8080
-            initialDelaySeconds: 10
-            periodSeconds: 5
+          # livenessProbe:
+          #   httpGet:
+          #     path: /auth/realms/master
+          #     port: 8080
+          #   initialDelaySeconds: 30
+          #   periodSeconds: 10
+          #   timeoutSeconds: 5
+          #   failureThreshold: 5
+          # readinessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: 8080
+          #   initialDelaySeconds: 10
+          #   periodSeconds: 5
           name: keycloak
           ports:
             - containerPort: 8080

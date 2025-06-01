@@ -80,12 +80,14 @@ app.post('/auth/callback', express.json(), async (req, res) => {
             res.cookie('auth_token', tokenData.access_token, {
                 httpOnly: false,
                 maxAge: 3600000,
-                sameSite: 'Lax'
+                sameSite: 'Lax',
+                domain: 'projekttb.local'
             })
             res.cookie('id_token', tokenData.id_token, {
                 httpOnly: true,
                 maxAge: 3600000,
-                sameSite: 'Lax'
+                sameSite: 'Lax',
+                domain: 'projekttb.local'
             })
             const roles = decoded.realm_access?.roles || []
             res.json({ 

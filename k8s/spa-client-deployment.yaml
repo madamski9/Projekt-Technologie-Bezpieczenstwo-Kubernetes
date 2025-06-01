@@ -20,7 +20,7 @@ spec:
         - name: spa-client
           image: madamski52081/spa-client:latest
           workingDir: /app
-          command: ["npm", "run", "dev"]
+          command: ["sh", "-c", "cp /app/.env /app/.env.local && npm run dev"]
           ports:
             - containerPort: 3000
               protocol: TCP
@@ -41,8 +41,14 @@ spec:
           volumeMounts:
             - mountPath: /app/config
               name: spa-client-cm0
+            - mountPath: /app/.env
+              name: spa-client-env
+              subPath: .env
       restartPolicy: Always
       volumes:
         - name: spa-client-cm0
+          configMap:
+            name: spa-client-cm0
+        - name: spa-client-env
           configMap:
             name: spa-client-cm0

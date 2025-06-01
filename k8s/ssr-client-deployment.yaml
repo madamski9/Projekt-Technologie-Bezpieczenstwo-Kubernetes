@@ -20,22 +20,21 @@ spec:
         - name: ssr-client
           image: madamski52081/ssr-client:latest
           workingDir: /app
-          command: ["npm", "run", "dev"]
+          command: ["sh", "-c", "cp /app/.env /app/.env.local && npm run start"]
           ports:
             - containerPort: 3000
               protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /
-              port: 3000
-            initialDelaySeconds: 15
-            periodSeconds: 20
-            failureThreshold: 3
           volumeMounts:
             - mountPath: /app/config
               name: ssr-client-cm0
+            - mountPath: /app/.env
+              name: ssr-client-env
+              subPath: .env
       restartPolicy: Always
       volumes:
         - name: ssr-client-cm0
+          configMap:
+            name: ssr-client-cm0
+        - name: ssr-client-env
           configMap:
             name: ssr-client-cm0
