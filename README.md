@@ -78,7 +78,7 @@ docker-compose down
 
 ---
 
-## 1. Uruchomienie projektu na Kubernetes
+## 1. Uruchomienie projektu 
 
 ### a) Uruchomienie wszystkiego automatycznie
 
@@ -138,3 +138,4 @@ kubectl delete namespace korepetycje
 - Skrypt `scripts/deploy.sh` automatyzuje cały proces wdrożenia i port-forwardingu.
 
 ---
+
