@@ -13,7 +13,7 @@ data:
     coverage/
   .env: |-
     API_URL=http://backend:3000              
-    NEXT_PUBLIC_LOGOUT_URL=http://projekttb.local/auth/logout
+    NEXT_PUBLIC_LOGOUT_URL=http://backend:3000/auth/logout
     PORT=3003
   .gitignore: |
     # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.

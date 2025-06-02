@@ -27,8 +27,8 @@ spec:
             - start-dev
             - --hostname-strict=false
             - --proxy-headers=xforwarded
-            - --hostname-url=http://projekttb.local/auth
-            # - --spi-script-upload-enabled=true
+            - --hostname-url=http://localhost:8080
+            - --spi-script-upload-enabled=true
             - --import-realm
           env:
             - name: KEYCLOAK_ADMIN
@@ -38,7 +38,7 @@ spec:
             - name: QUARKUS_TRANSACTION_MANAGER_ENABLE_RECOVERY
               value: "true"
             - name: KEYCLOAK_FRONTEND_URL
-              value: http://projekttb.local/auth
+              value: http://localhost:8080
             - name: KC_FEATURES
               value: scripts
           image: quay.io/keycloak/keycloak:24.0.1

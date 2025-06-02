@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import UserRolesManager from '../components/UserModal'
-import UserCreateModal from '../components/CreateUserModal'
+import UserRolesManager from './components/UserModal'
+import UserCreateModal from './components/CreateUserModal'
 
 export async function getServerSideProps(context) {
   const token = context.req.cookies['auth_token']
@@ -62,11 +62,17 @@ const LandingPage = ({ usersData, rolesData, userRolesMap, error }) => {
   const [isCreatingUser, setIsCreatingUser] = useState(false)
   const [userRolesMapState, setUserRolesMapState] = useState(userRolesMap)
 
+  const handleLogout = (e) => {
+    e.preventDefault()
+    console.log("env: ", process.env.NEXT_PUBLIC_LOGOUT_URL)
+    window.location.href = process.env.NEXT_PUBLIC_LOGOUT_URL || "/"
+  }
+
   return (
     <div className="admin-container">
       <nav className="admin-navbar">
         <div className="navbar-brand">Panel Administratora</div>
-        <button className="logout-button" onClick={() => window.location.href = process.env.NEXT_PUBLIC_LOGOUT_URL}>
+        <button className="logout-button" onClick={(e) => handleLogout(e)}>
           Wyloguj się
         </button>
       </nav>

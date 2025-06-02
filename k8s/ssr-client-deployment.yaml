@@ -20,10 +20,15 @@ spec:
         - name: ssr-client
           image: madamski52081/ssr-client:latest
           workingDir: /app
-          command: ["sh", "-c", "cp /app/.env /app/.env.local && npm run start"]
+          command: ["sh", "-c", "npm run start"]
           ports:
             - containerPort: 3000
               protocol: TCP
+          env:
+            - name: API_URL
+              value: "http://backend:3000"
+            - name: NEXT_PUBLIC_LOGOUT_URL
+              value: "http://backend:3000/auth/logout"
           volumeMounts:
             - mountPath: /app/config
               name: ssr-client-cm0
