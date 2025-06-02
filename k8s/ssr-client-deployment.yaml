@@ -5,7 +5,7 @@ metadata:
   labels:
     io.kompose.service: ssr-client
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       io.kompose.service: ssr-client
@@ -24,6 +24,13 @@ spec:
           ports:
             - containerPort: 3000
               protocol: TCP
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 100m
+              memory: 128Mi
           env:
             - name: API_URL
               value: "http://backend:3000"

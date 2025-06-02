@@ -5,7 +5,7 @@ metadata:
   labels:
     io.kompose.service: spa-client
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       io.kompose.service: spa-client
@@ -24,20 +24,13 @@ spec:
           ports:
             - containerPort: 3000
               protocol: TCP
-          # livenessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: 3002
-          #   initialDelaySeconds: 15
-          #   periodSeconds: 20
-          #   failureThreshold: 3
-          # readinessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: 3002
-          #   initialDelaySeconds: 5
-          #   periodSeconds: 10
-          #   failureThreshold: 3
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 100m
+              memory: 128Mi
           volumeMounts:
             - mountPath: /app/config
               name: spa-client-cm0
