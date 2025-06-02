@@ -25,12 +25,11 @@ spec:
       containers:
         - args:
             - start-dev
-            - --features=scripts
+            - --import-realm
             - --spi-script-upload-enabled=true
             - --hostname-strict=false
             - --proxy-headers=xforwarded
             - --hostname-url=http://localhost:8080
-            - --import-realm
           env:
             - name: KEYCLOAK_ADMIN
               value: admin
