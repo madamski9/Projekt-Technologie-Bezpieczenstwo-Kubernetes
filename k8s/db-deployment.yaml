@@ -42,6 +42,7 @@ spec:
             initialDelaySeconds: 10
             periodSeconds: 30
             failureThreshold: 5
+            timeoutSeconds: 10
           name: db
           ports:
             - containerPort: 5432
@@ -52,6 +53,9 @@ spec:
               subPath: db-password
             - mountPath: /var/lib/postgresql/data
               name: db-data
+            - mountPath: /docker-entrypoint-initdb.d/backup.sql
+              name: db-cm0
+              subPath: backup.sql
       restartPolicy: Always
       volumes:
         - name: db-password
@@ -63,3 +67,9 @@ spec:
         - name: db-data
           persistentVolumeClaim:
             claimName: db-data
+        - name: db-cm0
+          configMap:
+            items:
+              - key: backup.sql
+                path: backup.sql
+            name: db-cm0

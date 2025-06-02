@@ -3,11 +3,15 @@ const { Pool } = pkg
 import dotenv from 'dotenv'
 dotenv.config()
 
+console.log('DB_HOST:', process.env.DB_HOST);
+console.log('DB_PORT:', process.env.DB_PORT);
+console.log('DB_PASS:', process.env.DB_PASS);
+
 const pool = new Pool({
-  host: process.env.DB_HOST || 'localhost',
-  port: process.env.DB_PORT || 5432,
+  host: process.env.DB_HOST || 'localhost' || 'db',
+  port: parseInt(process.env.DB_PORT || '5432', 10),
   user: 'user',
-  password: process.env.DB_PASS,
+  password: process.env.DB_PASS || 'password',
   database: 'mydb'
 })
 
