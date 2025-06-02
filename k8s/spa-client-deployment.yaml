@@ -24,20 +24,20 @@ spec:
           ports:
             - containerPort: 3000
               protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /
-              port: 3000
-            initialDelaySeconds: 15
-            periodSeconds: 20
-            failureThreshold: 3
-          readinessProbe:
-            httpGet:
-              path: /
-              port: 3000
-            initialDelaySeconds: 5
-            periodSeconds: 10
-            failureThreshold: 3
+          # livenessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: 3002
+          #   initialDelaySeconds: 15
+          #   periodSeconds: 20
+          #   failureThreshold: 3
+          # readinessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: 3002
+          #   initialDelaySeconds: 5
+          #   periodSeconds: 10
+          #   failureThreshold: 3
           volumeMounts:
             - mountPath: /app/config
               name: spa-client-cm0

@@ -25,10 +25,11 @@ spec:
       containers:
         - args:
             - start-dev
+            - --features=scripts
+            - --spi-script-upload-enabled=true
             - --hostname-strict=false
             - --proxy-headers=xforwarded
             - --hostname-url=http://localhost:8080
-            - --spi-script-upload-enabled=true
             - --import-realm
           env:
             - name: KEYCLOAK_ADMIN
@@ -42,20 +43,6 @@ spec:
             - name: KC_FEATURES
               value: scripts
           image: quay.io/keycloak/keycloak:24.0.1
-          # livenessProbe:
-          #   httpGet:
-          #     path: /auth/realms/master
-          #     port: 8080
-          #   initialDelaySeconds: 30
-          #   periodSeconds: 10
-          #   timeoutSeconds: 5
-          #   failureThreshold: 5
-          # readinessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: 8080
-          #   initialDelaySeconds: 10
-          #   periodSeconds: 5
           name: keycloak
           ports:
             - containerPort: 8080
@@ -65,6 +52,13 @@ spec:
               name: keycloak-data
             - mountPath: /opt/keycloak/data/import
               name: keycloak-cm1
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 5
+            failureThreshold: 6
       restartPolicy: Always
       volumes:
         - name: keycloak-data
