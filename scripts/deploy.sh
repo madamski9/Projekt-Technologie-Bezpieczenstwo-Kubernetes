@@ -24,7 +24,7 @@ echo "Czekam aż pody będą w stanie Running i Ready 1/1..."
 
 for app in ssr-client spa-client b2b-client backend keycloak db; do
   echo -n "Czekam na pod $app..."
-  for i in {1..120}; do
+  while true; do
     pod=$(kubectl get pods -l "io.kompose.service=$app" -n $NAMESPACE -o jsonpath="{.items[0].metadata.name}" 2>/dev/null)
     phase=$(kubectl get pod "$pod" -n $NAMESPACE -o jsonpath="{.status.phase}" 2>/dev/null)
     ready=$(kubectl get pod "$pod" -n $NAMESPACE -o jsonpath="{.status.containerStatuses[0].ready}" 2>/dev/null)
@@ -35,11 +35,6 @@ for app in ssr-client spa-client b2b-client backend keycloak db; do
     fi
 
     sleep 1
-    if [ $i -eq 120 ]; then
-      echo " NIE POWIODŁO SIĘ"
-      kubectl describe pod "$pod" -n $NAMESPACE
-      exit 1
-    fi
   done
 done
 
