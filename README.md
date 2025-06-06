@@ -5,6 +5,15 @@
 - Zainstalowany [Docker](https://www.docker.com/)
 - Zainstalowany [Docker Compose](https://docs.docker.com/compose/)
 
+## Logowanie i rejestracja
+
+Aby zalogować się do **panelu administratora**, użyj poniższych danych:
+
+- **Login:** `sigma`
+- **Hasło:** `sigma`
+
+Aby uzyskać dostęp do **panelu ucznia** lub **panelu korepetytora**, należy się najpierw **zarejestrować** i wypełnić wszystkie wymagane pola w formularzu rejestracyjnym.
+
 ---
 
 ## 1. Budowanie obrazów Dockera (opcjonalnie)
