@@ -53,7 +53,6 @@ docker-compose ps
 - **B2B Client:**   http://localhost:3003
 - **Backend:**      http://localhost:3000
 - **Keycloak:**     http://localhost:8080
-- **Postgres:**     postgres://localhost:5432
 
 ---
 
@@ -114,7 +113,6 @@ Po uruchomieniu skryptu porty będą przekierowane automatycznie.
 - **B2B Client:**   http://localhost:3003
 - **Backend:**      http://localhost:3000
 - **Keycloak:**     http://localhost:8080
-- **Postgres:**     postgres://localhost:5433
 
 ---
 
