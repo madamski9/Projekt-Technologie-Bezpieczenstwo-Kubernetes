@@ -68,7 +68,6 @@ app.post('/auth/callback', express.json(), async (req, res) => {
 
         if (tokenData.access_token && tokenData.id_token) {
             const decoded = jwt.decode(tokenData.access_token)
-            console.log("decoded: ", decoded)
         
             const userInfo = {
               sub: decoded.sub,
@@ -135,7 +134,6 @@ app.post('/auth/google/callback', express.json(), async (req, res) => {
         })
 
         const tokenData = await tokenRes.json()
-        console.log("token: ", tokenData.access_token)
 
         const userRes = await fetch(process.env.GOOGLE_USER_INFO_URL, {
         headers: {
@@ -144,7 +142,6 @@ app.post('/auth/google/callback', express.json(), async (req, res) => {
         })
 
         const userInfo = await userRes.json()
-        console.log("userInfo: ", userInfo)
 
         await saveUser(userInfo)
         const cookies = cookie.parse(req.headers.cookie || "")
@@ -246,7 +243,6 @@ app.post('/google/calendar/add-event', express.json(), async (req, res) => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ event: result })
             })
-            console.log('Fetch response status:', response.status)
             const responseBody = await response.text()
 
             if (!response.ok) {
@@ -330,7 +326,6 @@ app.get('/auth/logout', (req, res) => {
 })
 
 app.get('/api/admin/users', requireRoles(['admin']), async (req, res) => {
-    console.log("test: ", req.headers.authorization)
     try {
         const kcAdminClient = await getKeycloakAdminClient()
         const users = await kcAdminClient.users.find()
@@ -522,7 +517,6 @@ app.get('/api/check-user', async (req, res) => {
     if (!token) return res.status(401).json({ error: 'Brak tokena' })
     
     const decoded = jwt.decode(token)
-    console.log('Decoded token:', decoded)
 
     const userId = decoded?.sub
     if (!userId) return res.status(401).json({ error: 'Brak ID użytkownika w tokenie' })
@@ -542,7 +536,6 @@ app.get('/api/check-user', async (req, res) => {
 app.post('/api/add-tutor', express.json(), async (req, res) => {
     const token = req.headers.authorization?.split(' ')[1] || req.cookies.auth_token
     if (!token) return res.status(401).json({ error: 'Brak tokena' })
-    console.log('req.body:', req.body)
 
     const decoded = jwt.decode(token)
     const sub = decoded?.sub
@@ -561,7 +554,6 @@ app.post('/api/add-tutor', express.json(), async (req, res) => {
 app.post('/api/add-student', express.json(), async (req, res) => {
     const token = req.headers.authorization?.split(' ')[1] || req.cookies.auth_token
     if (!token) return res.status(401).json({ error: 'Brak tokena' })
-    console.log('req.body:', req.body)
 
     const decoded = jwt.decode(token)
     const sub = decoded?.sub
