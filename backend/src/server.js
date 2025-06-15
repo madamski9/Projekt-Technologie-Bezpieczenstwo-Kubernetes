@@ -21,7 +21,7 @@ dotenv.config()
 const app = express()
 const PORT = process.env.PORT 
 app.use(cors({
-    origin: [process.env.FRONTEND_URL, "http://localhost:3001"], 
+    origin: [process.env.FRONTEND_URL, process.env.FRONTEND_URL_2], 
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization'],
 }))
@@ -178,10 +178,10 @@ app.get('/google/calendar/events', async (req, res) => {
   if (!authHeader) return res.status(401).json({ error: 'Brak nagłówka Authorization' })
 
   const token = authHeader.split(' ')[1]
-  const calendarId = "24e4503631de91fbae635719c39955f1b96785b5c42bc2eb2fcdf76f1e7b8533@group.calendar.google.com"
+  const calendarId = process.env.GOOGLE_CALENDAR_ID
 
   try {
-    const response = await fetch(`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calendarId)}/events`, {
+    const response = await fetch(`${process.env.GOOGLE_CALENDAR_API}${encodeURIComponent(calendarId)}/events`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -212,7 +212,7 @@ app.post('/google/calendar/add-event', express.json(), async (req, res) => {
         return res.status(400).json({ error: 'brakuje pol: summary, start, end' })
     }
 
-    const calendarId = '24e4503631de91fbae635719c39955f1b96785b5c42bc2eb2fcdf76f1e7b8533@group.calendar.google.com'
+    const calendarId = process.env.GOOGLE_CALENDAR_ID
 
     const eventData = {
         summary,
@@ -222,7 +222,7 @@ app.post('/google/calendar/add-event', express.json(), async (req, res) => {
     }
 
     try {
-        const googleRes = await fetch(`https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events`, {
+        const googleRes = await fetch(`${process.env.GOOGLE_CALENDAR_API}${calendarId}/events`, {
             method: 'POST',
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -238,7 +238,7 @@ app.post('/google/calendar/add-event', express.json(), async (req, res) => {
         }
         // b2b 
         try {
-            const response = await fetch('http://b2b-client:3003/notifications/new-event', {
+            const response = await fetch(`${process.env.B2B_CLIENT_URI}/notifications/new-event`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ event: result })
@@ -274,10 +274,10 @@ app.delete('/google/calendar/delete-event/:eventId', async (req, res) => {
     return res.status(400).json({ error: 'brak eventId w parametrach' })
   }
 
-  const calendarId = '24e4503631de91fbae635719c39955f1b96785b5c42bc2eb2fcdf76f1e7b8533@group.calendar.google.com'
+  const calendarId = process.env.GOOGLE_CALENDAR_ID
 
   try {
-    const googleRes = await fetch(`https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events/${eventId}`, {
+    const googleRes = await fetch(`${process.env.GOOGLE_CALENDAR_API}${calendarId}/events/${eventId}`, {
       method: 'DELETE',
       headers: {
         Authorization: `Bearer ${token}`
@@ -311,7 +311,7 @@ app.get('/auth/logout', (req, res) => {
     const idToken = req.cookies.id_token
 
     if (!idToken) {
-        return res.redirect('http://localhost:3002')
+        return res.redirect(`${process.env.FRONTEND_URL}`)
     }
 
     res.clearCookie('auth_token', { httpOnly: false, sameSite: 'Lax' })
@@ -319,7 +319,7 @@ app.get('/auth/logout', (req, res) => {
     res.clearCookie('user_role', { httpOnly: true, sameSite: 'Lax' })
     res.clearCookie('google_token', { httpOnly: false, sameSite: 'Lax' })
 
-    const postLogoutRedirect = encodeURIComponent('http://localhost:3002')
+    const postLogoutRedirect = encodeURIComponent(`${process.env.FRONTEND_URL}`)
     const logoutURL = `http://localhost:8080/realms/korepetycje/protocol/openid-connect/logout?id_token_hint=${idToken}&post_logout_redirect_uri=${postLogoutRedirect}`
 
     return res.redirect(logoutURL)

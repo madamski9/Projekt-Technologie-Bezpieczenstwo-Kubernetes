@@ -44,7 +44,6 @@ const Callback = () => {
               'Authorization': `Bearer ${token}`
             },
             credentials: "include",
-            body: JSON.stringify({ code }),
           })
 
           if (!checkRes.ok) throw new Error("User check failed")
