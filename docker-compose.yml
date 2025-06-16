@@ -115,7 +115,6 @@ services:
     environment:
       - KEYCLOAK_ADMIN=${KEYCLOAK_USER}
       - KEYCLOAK_ADMIN_PASSWORD=${KEYCLOAK_PASSWORD}
-      - QUARKUS_TRANSACTION_MANAGER_ENABLE_RECOVERY=true
       - KC_FEATURES=scripts
     ports:
       - "8080:8080"
